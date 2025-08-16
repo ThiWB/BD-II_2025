@@ -2,13 +2,11 @@
 
 namespace EF_Teste.Models
 {
-    public class Student
+    public class Course
     {
         [Key]
         public int ID { get; set; }
-        public string? LastName { get; set; }
-        public string? FirstMidName { get; set; }
-        public DateTime EnrollmentDate { get; set; }
+        public string? Name { get; set; }
 
         public List<StudentCourses>? StudentCourses { get; set; }
     }
