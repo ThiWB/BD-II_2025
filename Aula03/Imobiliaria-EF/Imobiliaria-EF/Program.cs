@@ -46,8 +46,7 @@ static void CreateDbIfNotExists(IHost host)
         var services = scope.ServiceProvider;
         try
         {
-            var context = services.GetRequiredService<ImobiliariaContext>();
-            DBInitializer.Initialize(context);
+            DBInitializer.Initialize(services); 
         }
         catch (Exception ex)
         {

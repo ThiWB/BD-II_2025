@@ -23,6 +23,12 @@ namespace Imobiliaria_EF.Data
                 new Imoveis { Nome = "Apartamento Central", Descricao = "Apartamento no centro da cidade", NumeroQuartos = 2, Valor = 350000 },
                 new Imoveis { Nome = "Sítio", Descricao = "Sítio com área verde", NumeroQuartos = 4, Valor = 750000 },
             };
+
+            foreach(Imoveis imovel in imoveis)
+            {
+                context.Imoveis.Add(imovel);
+            }
+
             context.Imoveis.AddRange(imoveis);
             context.SaveChanges();
 
@@ -31,6 +37,12 @@ namespace Imobiliaria_EF.Data
                 new Inquilino { Nome = "João da Silva", Idade = "30", QuantImoveis = 1 },
                 new Inquilino { Nome = "Maria Oliveira", Idade = "45", QuantImoveis = 2 },
             };
+
+            foreach (Inquilino inquilino in inquilinos)
+            {
+                context.Inquilinos.Add(inquilino);
+            }
+
             context.Inquilinos.AddRange(inquilinos);
             context.SaveChanges();
 
@@ -40,6 +52,12 @@ namespace Imobiliaria_EF.Data
                 new InquilinoImoveis { InquilinoId = inquilinos[1].Id, ImovelId = imoveis[1].Id },
                 new InquilinoImoveis { InquilinoId = inquilinos[1].Id, ImovelId = imoveis[2].Id },
             };
+
+            foreach (InquilinoImoveis inquilinoImovel in inquilinoImoveis)
+            {
+                context.InquilinoImoveis.Add(inquilinoImovel);
+            }
+
             context.InquilinoImoveis.AddRange(inquilinoImoveis);
             context.SaveChanges();
         }
