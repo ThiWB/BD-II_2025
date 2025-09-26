@@ -1,6 +1,7 @@
 using EF_Teste.Data;
 using EF_Teste.Repository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
@@ -14,7 +15,6 @@ builder.Services.AddDbContext<SchoolContext>(options =>
 
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
-
 
 var app = builder.Build();
 
