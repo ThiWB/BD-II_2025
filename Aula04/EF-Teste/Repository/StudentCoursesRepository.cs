@@ -1,6 +1,9 @@
 ﻿using EF_Teste.Data;
 using EF_Teste.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace EF_Teste.Repository
 {
@@ -21,16 +24,19 @@ namespace EF_Teste.Repository
 
         public async Task Delete(StudentCourses studentCourses)
         {
-            _schoolContext.Remove(studentCourses);
+            _schoolContext.StudentCourses.Remove(studentCourses);
             await _schoolContext.SaveChangesAsync();
         }
 
-        public async Task<StudentCourses> Get(int studentId, int courseId)
+        public async Task<List<StudentCourses>> Get(int studentId, int courseId)
         {
-            return await _schoolContext.StudentCourses
-                        .Include(x => x.Course)
-                        .Include(x => x.Student)
-                        .FirstOrDefaultAsync(w => w.StudentID == studentId && w.CourseID == courseId);
+            var result = await _schoolContext.StudentCourses
+                .Include(x => x.Course)
+                .Include(x => x.Student)
+                .Where(sc => sc.StudentID == studentId && sc.CourseID == courseId)
+                .ToListAsync();
+
+            return result;
         }
 
         public async Task<List<StudentCourses>> GetAll()
@@ -41,17 +47,9 @@ namespace EF_Teste.Repository
                 .ToListAsync();
         }
 
-        public async Task<List<StudentCourses>> GetByCourseId(int courseId)
+        public async Task<List<StudentCourses>> GetByCourseId(string name)
         {
-            return await _schoolContext.StudentCourses
-                .Include(x => x.Course)
-                .Include(x => x.Student)
-                .Where(w => w.CourseID == courseId)
-                .ToListAsync();
-        }
-
-        public async Task<List<StudentCourses>> GetByCourseName(string name)
-        {
+            // Supondo que "name" é parte do nome do curso
             return await _schoolContext.StudentCourses
                 .Include(x => x.Course)
                 .Include(x => x.Student)
@@ -59,12 +57,18 @@ namespace EF_Teste.Repository
                 .ToListAsync();
         }
 
-        public async Task<List<StudentCourses>> GetByStudentId(int studentId)
+        public async Task<List<StudentCourses>> GetByCourseName(string name)
+        {
+            // Mesmo comportamento de GetByCourseId - pode ser unificado
+            return await GetByCourseId(name);
+        }
+
+        public async Task<List<StudentCourses>> GetByStudentCoursesId(int studentId)
         {
             return await _schoolContext.StudentCourses
                 .Include(x => x.Course)
                 .Include(x => x.Student)
-                .Where(w => w.StudentID == studentId)
+                .Where(sc => sc.StudentID == studentId)
                 .ToListAsync();
         }
 
@@ -73,7 +77,7 @@ namespace EF_Teste.Repository
             return await _schoolContext.StudentCourses
                 .Include(x => x.Course)
                 .Include(x => x.Student)
-                .Where(w => w.Student!.Name!.ToLower().Contains(name.ToLower()))
+                .Where(w => w.Student!.LastName!.ToLower().Contains(name.ToLower()))
                 .ToListAsync();
         }
 

@@ -27,7 +27,7 @@ namespace EF_Teste.Repository
 
         public async Task<List<Student>> GetAll()
         {
-            var data = await _context.Students.ToListAsync();
+            var data = await _context.Students.Include(sc => sc.StudentCourses).ToListAsync(c => c.Courses);
             return data;
 
         }
