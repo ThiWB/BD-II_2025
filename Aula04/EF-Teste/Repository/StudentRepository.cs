@@ -30,9 +30,21 @@ namespace EF_Teste.Repository
 
         public async Task<List<Student>> GetAll()
         {
-            var data = await _context.Students
-                .Include(sc => sc.StudentCourses)
+            return await _context.Students
+                .Include(s => s.StudentCourses)
                     .ThenInclude(sc => sc.Course)
+                .ToListAsync();
+        }
+
+        public async Task<List<Student>> GetAllNotEnrolled()
+        {
+            var enrolledStudentIds = await _context.StudentCourses
+                .Select(sc => sc.StudentID)
+                .Distinct()
+                .ToListAsync();
+
+            var data = await _context.Students
+                .Where(s => !enrolledStudentIds.Contains(s.ID))
                 .ToListAsync();
 
             return data;
@@ -40,21 +52,17 @@ namespace EF_Teste.Repository
 
         public async Task<Student?> GetById(int id)
         {
-            var student = await _context.Students
-                .Include(sc => sc.StudentCourses)
+            return await _context.Students
+                .Include(s => s.StudentCourses)
                     .ThenInclude(sc => sc.Course)
                 .FirstOrDefaultAsync(s => s.ID == id);
-
-            return student;
         }
 
         public async Task<List<Student>> GetByName(string name)
         {
-            var students = await _context.Students
-                .Where(s => s.FirstMidName!.ToLower().Contains(name.ToLower()))
+            return await _context.Students
+                .Where(s => s.FirstMidName != null && s.FirstMidName.ToLower().Contains(name.ToLower()))
                 .ToListAsync();
-
-            return students;
         }
 
         public async Task Update(Student student)
